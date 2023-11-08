@@ -14,7 +14,6 @@
 // Execute `rustlings hint hashmaps3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 use std::collections::HashMap;
 
@@ -24,9 +23,33 @@ struct Team {
     goals_conceded: u8,
 }
 
+// fn update_score(
+//     scores: &mut HashMap<String, Team>,
+//     team_name: String,
+//     goal_scoreed: u8,
+//     goal_conceded: u8,
+// ) {
+//     let team: &mut Team = scores.entry(team_name.clone()).or_insert(Team {
+//         goals_scored: 0,
+//         goals_conceded: 0,
+//     });
+//     team.goals_conceded += goal_conceded;
+//     team.goals_scored += goal_scoreed;
+// }
+
 fn build_scores_table(results: String) -> HashMap<String, Team> {
     // The name of the team is the key and its associated struct is the value.
     let mut scores: HashMap<String, Team> = HashMap::new();
+
+    let mut update_score_fn = |team_name: String, goal_scoreed: u8, goal_conceded: u8|  {
+        let team: &mut Team = scores.entry(team_name.clone()).or_insert(Team {
+            goals_scored: 0,
+            goals_conceded: 0,
+        });
+        team.goals_conceded += goal_conceded;
+        team.goals_scored += goal_scoreed;
+
+    };
 
     for r in results.lines() {
         let v: Vec<&str> = r.split(',').collect();
@@ -39,6 +62,9 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         // will be the number of goals conceded from team_2, and similarly
         // goals scored by team_2 will be the number of goals conceded by
         // team_1.
+
+        update_score_fn(team_1_name, team_1_score, team_2_score);
+        update_score_fn(team_2_name, team_2_score, team_1_score);
     }
     scores
 }
